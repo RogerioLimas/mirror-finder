@@ -43,7 +43,6 @@ func findFastest(urls []string) response {
 		mirrorURL := url
 
 		go func() {
-			fmt.Printf("Requesting %s\n", mirrorURL)
 			start := time.Now()
 
 			_, err := http.Get(fmt.Sprintf("%s/README", mirrorURL))
