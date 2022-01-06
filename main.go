@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/rogeriolimas/mirror-finder/mirrors"
@@ -16,6 +18,17 @@ type response struct {
 }
 
 func main() {
+	port := ":8080"
+	
+	args := os.Args
+	if len(args) == 2 {
+		tempPort, err := strconv.Atoi(args[1])
+		if err == nil {
+			port = fmt.Sprintf(":%d", tempPort)
+		}
+		
+	}
+
 	http.HandleFunc("/fastest-mirror", func(w http.ResponseWriter, r *http.Request) {
 		response := findFastest(mirrors.MirrorList)
 		jsonResponse, _ := json.Marshal(response)
@@ -24,7 +37,6 @@ func main() {
 		w.Write(jsonResponse)
 	})
 
-	port := ":8080"
 	server := &http.Server{
 		Addr:           port,
 		ReadTimeout:    10 * time.Second,
